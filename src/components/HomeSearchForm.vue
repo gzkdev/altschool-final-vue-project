@@ -51,13 +51,12 @@
 .form button {
     background-color: #000;
     color: #fff;
-    border-radius: 100vh;
-    cursor: pointer;
+    font-size: 16px;
     width: 200px;
     margin: 0 auto;
     transition: 200ms;
-    font-size: 16px;
-
+    border-radius: 2px;
+    cursor: pointer;
 }
 
 .form button:hover {
@@ -78,7 +77,8 @@ export default {
         },
         handleSubmit(e) {
             e.preventDefault()
-            console.log(this.user)
+            if (this.user == "") return
+            this.$router.push(this.user)
         }
     }
 }
