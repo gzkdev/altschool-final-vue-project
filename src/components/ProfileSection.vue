@@ -1,10 +1,11 @@
 <template>
-    <div class="container">
+    <div v-if="isLoading">Loading</div>
+    <div v-else class="container">
         <div class="box">
             <!-- <div class="header">
             </div> -->
             <div class="id">
-                <div class="name">{{ $route.params.user }}</div>
+                <div class="name">{{ profileData.name }}</div>
                 <a href="#" class="link">View on github</a>
             </div>
         </div>
@@ -19,8 +20,8 @@
                     </svg>
                 </div>
                 <div class="row-items">
-                    <div class="title">+234 70 3964 3230</div>
                     <div class="tag">Phone</div>
+                    <div class="title">+234 70 3964 3230</div>
                 </div>
             </div>
             <div class="row">
@@ -33,8 +34,8 @@
                     </svg>
                 </div>
                 <div class="row-items">
-                    <div class="title">+234 70 3964 3230</div>
                     <div class="tag">Location</div>
+                    <div class="title">+234 70 3964 3230</div>
                 </div>
             </div>
             <div class="row">
@@ -48,15 +49,55 @@
                     </svg>
                 </div>
                 <div class="row-items">
-                    <div class="title">+234 70 3964 3230</div>
                     <div class="tag">Phone</div>
+                    <div class="title">+234 70 3964 3230</div>
                 </div>
             </div>
-            <button class="back-btn">Go back to Home</button>
+            <button class="back-btn">View Repositories</button>
             <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> -->
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            profileData: {},
+            reposData: [],
+            isLoading: true
+        }
+    },
+    methods: {
+        async fetchUserGithubProfile() {
+            try {
+                let USERNAME = this.$route.params.user;
+                const res = await fetch(`https://api.github.com/users/${USERNAME}`)
+                const data = await res.json()
+                this.profileData = data
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        async fetchUserGithubRepositories() {
+            let USERNAME = this.$route.params.user;
+            try {
+                const res = await fetch(`https://api.github.com/users/${USERNAME}/repos`)
+                const data = await res.json()
+                this.reposData = data
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    },
+    mounted() {
+        this.isLoading = true
+        this.fetchUserGithubProfile()
+        this.fetchUserGithubRepositories()
+        this.isLoading = false
+    },
+}
+</script>
 
 <style scoped>
 .container {
@@ -96,7 +137,7 @@
 
 .row {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 16px;
     padding: 16px 20px;
 }
