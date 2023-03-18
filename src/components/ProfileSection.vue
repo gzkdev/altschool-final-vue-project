@@ -2,11 +2,13 @@
     <div v-if="isLoading">Loading</div>
     <div v-else class="container">
         <div class="box">
-            <!-- <div class="header">
-            </div> -->
+            <div class="img-box">
+                <img :src="profileData?.avatar_url" alt="profile img">
+            </div>
             <div class="id">
                 <div class="name">{{ profileData.name }}</div>
-                <a href="#" class="link">View on github</a>
+                <a :href="getProfileLink()" target="_blank" rel="noopener noreferrer" class="link">View on
+                    github</a>
             </div>
         </div>
         <div class="details">
@@ -20,8 +22,8 @@
                     </svg>
                 </div>
                 <div class="row-items">
-                    <div class="tag">Phone</div>
-                    <div class="title">+234 70 3964 3230</div>
+                    <div class="tag">Username</div>
+                    <div class="title">{{ profileData.login ?? "Null" }}</div>
                 </div>
             </div>
             <div class="row">
@@ -35,7 +37,7 @@
                 </div>
                 <div class="row-items">
                     <div class="tag">Location</div>
-                    <div class="title">+234 70 3964 3230</div>
+                    <div class="title">{{ profileData.location ?? "Null" }}</div>
                 </div>
             </div>
             <div class="row">
@@ -49,12 +51,11 @@
                     </svg>
                 </div>
                 <div class="row-items">
-                    <div class="tag">Phone</div>
-                    <div class="title">+234 70 3964 3230</div>
+                    <div class="tag">Bio</div>
+                    <div class="title">{{ profileData.bio ?? "Null" }}</div>
                 </div>
             </div>
-            <button class="back-btn">View Repositories</button>
-            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> -->
+            <RouterLink to="/" class="back-btn">Home</RouterLink>
         </div>
     </div>
 </template>
@@ -64,7 +65,6 @@ export default {
     data() {
         return {
             profileData: {},
-            reposData: [],
             isLoading: true
         }
     },
@@ -75,25 +75,18 @@ export default {
                 const res = await fetch(`https://api.github.com/users/${USERNAME}`)
                 const data = await res.json()
                 this.profileData = data
+                console.log(data)
             } catch (e) {
                 console.log(e)
             }
         },
-        async fetchUserGithubRepositories() {
-            let USERNAME = this.$route.params.user;
-            try {
-                const res = await fetch(`https://api.github.com/users/${USERNAME}/repos`)
-                const data = await res.json()
-                this.reposData = data
-            } catch (e) {
-                console.log(e)
-            }
+        getProfileLink() {
+            return this.profileData.html_url
         }
     },
     mounted() {
         this.isLoading = true
         this.fetchUserGithubProfile()
-        this.fetchUserGithubRepositories()
         this.isLoading = false
     },
 }
@@ -115,7 +108,25 @@ export default {
     width: 100%;
     position: relative;
     height: 320px;
-    background-color: bisque;
+}
+
+.img-box {
+    width: 160px;
+    height: 160px;
+    border-radius: 4px;
+    position: absolute;
+    background-color: #fff;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+.img-box img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
 }
 
 .id {
@@ -147,6 +158,10 @@ export default {
 }
 
 .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     background-color: #000;
     color: #fff;
     width: calc(100% - 40px);
