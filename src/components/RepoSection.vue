@@ -44,7 +44,6 @@ export default {
                 const res = await fetch(`https://api.github.com/users/${USERNAME}/repos`)
                 const data = await res.json()
                 this.reposData = data
-                console.log(data)
             } catch (e) {
                 console.log(e)
             }

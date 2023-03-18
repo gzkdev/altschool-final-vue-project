@@ -75,7 +75,6 @@ export default {
                 const res = await fetch(`https://api.github.com/users/${USERNAME}`)
                 const data = await res.json()
                 this.profileData = data
-                console.log(data)
             } catch (e) {
                 console.log(e)
             }
