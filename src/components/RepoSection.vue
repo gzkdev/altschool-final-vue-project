@@ -4,7 +4,7 @@
         <div><span>{{ $route.params.user }}</span> has {{ reposData.length }} public repos</div>
         <ul class="grid">
             <li class="grid-item" v-for="repo in reposData">
-                <RouterLink :to="`/repos/${repo.name}`">
+                <RouterLink :to="`/${repo.name}`">
                     <div>{{ repo.name }}</div>
                     <div class="row">
                         <div data-stat-count>
